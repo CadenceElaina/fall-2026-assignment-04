@@ -1,0 +1,65 @@
+erDiagram
+    %% existing: USERS (001_initial_schema)
+
+    USERS ||--o| BORROWERS : "registers as"
+    GENRES ||--o{ BOOKS : "classifies"
+    BOOKS ||--o{ BOOK_AUTHORS : "written by"
+    AUTHORS ||--o{ BOOK_AUTHORS : "writes"
+    BORROWERS ||--o{ LOANS : "borrows"
+    BOOKS ||--o{ LOANS : "loaned through"
+
+    USERS {
+        int id PK
+        varchar(255) email UK
+        varchar(255) name "optional"
+        timestamp created_at "default now"
+    }
+
+    BORROWERS {
+        int id PK
+        int user_id FK, UK
+        varchar(50) card_number UK
+        varchar(50) phone "optional"
+        int max_active_loans "default 5"
+        decimal fine_balance "default 0"
+    }
+
+    GENRES {
+        int id PK
+        varchar(100) name UK
+    }
+
+    BOOKS {
+        int id PK
+        int genre_id FK
+        varchar(255) title
+        varchar(50) isbn UK
+        int published_year "optional"
+        int total_copies "default 1"
+        int available_copies "default 1"
+        timestamp created_at "default now"
+    }
+
+    AUTHORS {
+        int id PK
+        varchar(100) first_name
+        varchar(100) last_name
+        date birth_date "optional"
+        text bio "optional"
+    }
+
+    BOOK_AUTHORS {
+        int book_id PK, FK
+        int author_id PK, FK
+        int author_order "default 1"
+    }
+
+    LOANS {
+        int id PK
+        int borrower_id FK
+        int book_id FK
+        timestamp loaned_at "default now"
+        date due_date
+        timestamp returned_at "optional"
+        decimal fine_amount "default 0"
+    }
